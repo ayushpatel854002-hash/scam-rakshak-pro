@@ -12,10 +12,12 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-      - name: Regenerate Fresh Android Folder & Enable Desugaring
+      - name: Regenerate Android & Configure Permissions + App Name
         run: |
           rm -rf android
-          flutter create . --platforms=android
+          flutter create . --platforms=android --project-name scam_rakshak_pro
+          sed -i 's/android:label="scam_rakshak_pro"/android:label="Scam Rakshak Pro"/g' android/app/src/main/AndroidManifest.xml
+          sed -i 's/<application/<uses-permission android:name="android.permission.RECEIVE_SMS"\/>\n    <uses-permission android:name="android.permission.READ_SMS"\/>\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"\/>\n    <uses-permission android:name="android.permission.VIBRATE"\/>\n    <application/g' android/app/src/main/AndroidManifest.xml
           sed -i 's/sourceCompatibility = JavaVersion.VERSION_17/isCoreLibraryDesugaringEnabled = true\n        sourceCompatibility = JavaVersion.VERSION_17/g' android/app/build.gradle.kts
           sed -i 's/sourceCompatibility = JavaVersion.VERSION_11/isCoreLibraryDesugaringEnabled = true\n        sourceCompatibility = JavaVersion.VERSION_17/g' android/app/build.gradle.kts
           sed -i 's/targetCompatibility = JavaVersion.VERSION_11/targetCompatibility = JavaVersion.VERSION_17/g' android/app/build.gradle.kts
