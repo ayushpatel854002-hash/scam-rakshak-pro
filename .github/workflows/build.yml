@@ -12,24 +12,32 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-      - name: Regenerate Fresh Android Folder & Fix JVM Target
+      - name: Regenerate Fresh Android Folder
         run: |
           rm -rf android
           flutter create . --platforms=android
+      - run: flutter pub get
+      - name: Fix Plugin JVM Compatibility
+        run: |
           cat << 'EOF' >> android/build.gradle.kts
           subprojects {
+              afterEvaluate {
+                  if (plugins.hasPlugin("com.android.library") || plugins.hasPlugin("com.android.application")) {
+                      extensions.configure<com.android.build.gradle.BaseExtension> {
+                          compileOptions {
+                              sourceCompatibility = JavaVersion.VERSION_17
+                              targetCompatibility = JavaVersion.VERSION_17
+                          }
+                      }
+                  }
+              }
               tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
                   compilerOptions {
                       jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
                   }
               }
-              tasks.withType<JavaCompile>().configureEach {
-                  sourceCompatibility = "17"
-                  targetCompatibility = "17"
-              }
           }
           EOF
-      - run: flutter pub get
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
         with:
