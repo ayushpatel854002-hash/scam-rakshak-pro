@@ -12,12 +12,12 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-      - name: Fix Gradle Version
+      - name: Regenerate Fresh Android Folder
         run: |
-          find . -name "gradle-wrapper.properties" -exec sed -i 's/gradle-.*-all.zip/gradle-9.3.1-all.zip/g' {} +
-          find . -name "gradle-wrapper.properties" -exec sed -i 's/gradle-.*-bin.zip/gradle-9.3.1-all.zip/g' {} +
+          rm -rf android
+          flutter create . --platforms=android
       - run: flutter pub get
-      - run: flutter build apk --release --android-skip-build-dependency-validation
+      - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
         with:
           name: Scam-Rakshak-Pro-APK
