@@ -12,6 +12,10 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+      - name: Fix Gradle Version
+        run: |
+          find . -name "gradle-wrapper.properties" -exec sed -i 's/gradle-.*-all.zip/gradle-8.9-all.zip/g' {} +
+          find . -name "gradle-wrapper.properties" -exec sed -i 's/gradle-.*-bin.zip/gradle-8.9-all.zip/g' {} +
       - run: flutter pub get
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
