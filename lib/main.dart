@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:another_telephony/telephony.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-// ऑफ़लाइन मास्टर Activation Keys (जिन्हें पेमेंट लेने के बाद यूज़र को दोगे)
 const List<String> validActivationKeys = [
   'SRP-PRO-2026',
   'AYUSH-VIP-999',
@@ -13,7 +12,6 @@ const List<String> validActivationKeys = [
 final FlutterLocalNotificationsPlugin notificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-// जब ऐप बंद या बैकग्राउंड में हो, तब SMS पकड़ने वाला हैंडलर
 @pragma('vm:entry-point')
 void backgroundMessageHandler(SmsMessage message) async {
   final body = message.body ?? '';
@@ -42,7 +40,6 @@ Future<void> _showScamNotification(String sender, String body) async {
   );
 }
 
-// 100% ऑफ़लाइन और हैक-प्रूफ़ स्कैम पहचान इंजन (बिना इंटरनेट के फ़ोन के अंदर काम करता है)
 class ScamEngine {
   static final List<String> dangerKeywords = [
     'kyc',
@@ -90,7 +87,7 @@ class ScamEngine {
     }
 
     if (lower.contains('.apk')) {
-      score += 5; // APK फाइल लिंक सीधा हाई-रिस्क है
+      score += 5;
     }
 
     return score >= 3;
@@ -578,4 +575,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const Text(
                     '• जीरो डेटा लीक: आपके SMS या बैंक मैसेज किसी बाहरी सर्वर या इंटरनेट पर नहीं भेजे जाते।\n'
                     '• ऑन-डिवाइस स्कैनिंग: सारा विश्लेषण सीधे आपके फ़ोन के प्रोसेसर पर ऑफ़लाइन होता है।\n'
-                    '• बैकग्राउंड रीय
+                    '• बैकग्राउंड रीयल-टाइम गार्ड: नया फ्रॉड SMS आते ही तुरंत चेतावनी नोटिफ़िकेशन मिलता है।',
+                    style: TextStyle(fontSize: 13.5, height: 1.5),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: d
